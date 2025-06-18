@@ -5,7 +5,8 @@ import { useChat } from "@ai-sdk/react";
 import { useAutoResume } from "@/hooks/use-auto-resume";
 import { useAuthToken } from "@convex-dev/auth/react";
 import { UIMessage } from "ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function ChatInterface({
   chatid,
@@ -17,12 +18,14 @@ export default function ChatInterface({
   autoResume: boolean;
 }) {
   const user = useAuthToken();
-
   const [model, setModel] = useState("openai/gpt-4.1-nano");
   const [options, setOptions] = useState({
     reasoningEffort: "low",
     webSearch: false,
   });
+
+  const systemPrompt = localStorage.getItem("system-prompt") || "";
+  const apiKey = localStorage.getItem("openrouter-key") || "";
 
   const {
     experimental_resume,
@@ -41,9 +44,15 @@ export default function ChatInterface({
       chatid,
       model: model,
       options: options,
+      systemPrompt: systemPrompt,
+      apiKey: apiKey,
     },
     headers: {
       Authorization: `Bearer ${user}`,
+    },
+
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 

@@ -1,5 +1,12 @@
 "use client";
-import { ChevronUp, MoreHorizontal, Trash2, User2, Share } from "lucide-react";
+import {
+  ChevronUp,
+  MoreHorizontal,
+  Trash2,
+  User2,
+  Share,
+  Settings,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { convexQuery } from "@convex-dev/react-query";
 import {
@@ -28,6 +35,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { Input } from "@/components/ui/input";
 import { CirclePlus } from "lucide-react";
 import { useMutation } from "convex/react";
+import { SettingsDialog } from "@/components/settings-dialog";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -41,6 +49,7 @@ export function AppSidebar() {
   });
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -156,25 +165,27 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <User2 /> {user?.data?.name}
-                  <ChevronUp className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-[--radix-popper-anchor-width]"
-              >
-                <DropdownMenuItem onClick={() => signOut()}>
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <SidebarMenuButton
+              className="cursor-pointer"
+              onClick={() => setSettingsOpen(true)}
+            >
+              <Settings />
+              Settings
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              className="cursor-pointer text-destructive hover:text-destructive"
+              onClick={() => signOut()}
+            >
+              <User2 />
+              Sign out
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </Sidebar>
   );
 }

@@ -12,6 +12,7 @@ import {
   createResumableStreamContext,
   ResumableStreamContext,
 } from "resumable-stream";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -117,7 +118,12 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: NextRequest) {
-  const { chatid, model, options, messages } = await request.json();
+  const { chatid, model, options, messages, systemPrompt, apiKey } =
+    await request.json();
+
+  const openrouter = createOpenRouter({
+    apiKey: apiKey || process.env.OPENROUTER_API_KEY,
+  });
 
   // Extract the auth token from the Authorization header
   const authHeader = request.headers.get("Authorization");
@@ -191,7 +197,7 @@ export async function POST(request: NextRequest) {
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({
-          model: instanceFactory(
+          model: openrouter(
             options.webSearch ? `${model}:online` : model,
             config.capabilities.supportsReasoning ? reasoningOption : {},
           ),
@@ -202,8 +208,7 @@ export async function POST(request: NextRequest) {
             delayInMs: 10,
           }),
 
-          system:
-            "Your name is Zylo.You are a helpful assistant that can answer questions and help with tasks. When presenting mathematical equations or formulas, format them using the following structure: Begin each section with a descriptive title in bold markdown formatting, followed by the equation rendered in LaTeX display mode using double dollar signs. For multiple related equations, group them using the aligned environment within a single display math block, ensuring proper alignment using ampersands before equal signs and double backslashes between lines. Each equation should be properly spaced with blank lines separating different mathematical concepts or topics. Use standard LaTeX notation for all mathematical symbols, operators, vectors, matrices, and special functions. Ensure that complex equations like differential equations, matrix operations, integrals, and multi-line derivations are clearly formatted with appropriate mathematical typography. Always use display mode rather than inline math to make the equations prominent and readable",
+          system: `${systemPrompt}. You are a helpful assistant that can answer questions and help with tasks. When presenting mathematical equations or formulas, format them using the following structure: Begin each section with a descriptive title in bold markdown formatting, followed by the equation rendered in LaTeX display mode using double dollar signs. For multiple related equations, group them using the aligned environment within a single display math block, ensuring proper alignment using ampersands before equal signs and double backslashes between lines. Each equation should be properly spaced with blank lines separating different mathematical concepts or topics. Use standard LaTeX notation for all mathematical symbols, operators, vectors, matrices, and special functions. Ensure that complex equations like differential equations, matrix operations, integrals, and multi-line derivations are clearly formatted with appropriate mathematical typography. Always use display mode rather than inline math to make the equations prominent and readable`,
 
           onFinish: async (message) => {
             // Insert the assistant message
