@@ -1,6 +1,7 @@
 "use client";
 import { ChevronUp, MoreHorizontal, Trash2, User2, Share } from "lucide-react";
-
+import { useQuery } from "@tanstack/react-query";
+import { convexQuery } from "@convex-dev/react-query";
 import {
   Sidebar,
   SidebarContent,
@@ -26,7 +27,8 @@ import Link from "next/link";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { Input } from "@/components/ui/input";
 import { CirclePlus } from "lucide-react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/convex/auth";
@@ -34,37 +36,39 @@ import { auth } from "@/convex/auth";
 export function AppSidebar() {
   const { signOut } = useAuthActions();
   const router = useRouter();
-  const user = useQuery(api.user.getUser, {});
+  const user = useQuery({
+    ...convexQuery(api.user.getUser, {}),
+  });
   const [search, setSearch] = useState("");
-  // const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setDebouncedSearch(search);
-  //   }, 300);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
 
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, [search]);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [search]);
 
-  // const { data: chats } = useQuery({
-  //   // If debouncedSearch is present, use searchChat with its title
-  //   // Otherwise, use getAllChats
-  //   ...convexQuery(
-  //     debouncedSearch ? api.chats.searchChat : api.chats.getAllChats, // Use searchChat if debouncedSearch exists, otherwise getAllChats
-  //     debouncedSearch ? { title: debouncedSearch } : {}, // Pass title if searching, else empty object
-  //   ),
-  //   queryKey: [
-  //     "convexQuery",
-  //     debouncedSearch ? api.chats.searchChat : api.chats.getAllChats,
-  //     debouncedSearch ? { title: debouncedSearch } : {},
-  //   ], // Dynamic query key based on search state
-  //   placeholderData: (previousData) => previousData, // Keep previous data while new data loads
-  //   // keepPreviousData: true, // Alternative to placeholderData for similar effect
-  // });
+  const { data: chats } = useQuery({
+    // If debouncedSearch is present, use searchChat with its title
+    // Otherwise, use getAllChats
+    ...convexQuery(
+      debouncedSearch ? api.chats.searchChat : api.chats.getAllChats, // Use searchChat if debouncedSearch exists, otherwise getAllChats
+      debouncedSearch ? { title: debouncedSearch } : {}, // Pass title if searching, else empty object
+    ),
+    queryKey: [
+      "convexQuery",
+      debouncedSearch ? api.chats.searchChat : api.chats.getAllChats,
+      debouncedSearch ? { title: debouncedSearch } : {},
+    ], // Dynamic query key based on search state
+    placeholderData: (previousData) => previousData, // Keep previous data while new data loads
+    // keepPreviousData: true, // Alternative to placeholderData for similar effect
+  });
 
-  const chats = useQuery(api.chats.getAllChats, {});
+  // const chats = useQuery(api.chats.getAllChats, {});
 
   const { isMobile } = useSidebar();
   const deleteChat = useMutation(api.chats.deleteChat);
@@ -155,7 +159,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> {user?.name}
+                  <User2 /> {user?.data?.name}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

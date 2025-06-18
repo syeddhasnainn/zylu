@@ -141,7 +141,6 @@ export async function POST(request: NextRequest) {
       chatId: chatid,
     });
 
-
     if (!chat) {
       await convex.action(api.ai.generateTitleAndInsertChat, {
         chatId: chatid,
@@ -193,6 +192,7 @@ export async function POST(request: NextRequest) {
       execute: (dataStream) => {
         const result = streamText({
           model: instanceFactory(
+            options.webSearch ? `${model}:online` : model,
             config.capabilities.supportsReasoning ? reasoningOption : {},
           ),
           messages,

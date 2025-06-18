@@ -23,7 +23,6 @@ export default function ChatInterface({
     reasoningEffort: "low",
     webSearch: false,
   });
-  
 
   const {
     experimental_resume,

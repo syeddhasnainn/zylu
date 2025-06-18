@@ -85,6 +85,11 @@ export default function ChatInput({
 
   const models = getModels();
 
+  // Find the current model's configuration to check if it supports reasoning
+  const currentModelConfig = models.find((m) => m.id === model);
+  const supportsReasoning =
+    currentModelConfig?.capabilities?.supportsReasoning ?? false;
+
   async function handleSendImage(event: React.ChangeEvent<HTMLInputElement>) {
     event.preventDefault();
 
@@ -221,36 +226,38 @@ export default function ChatInput({
               <Globe className="h-4 w-4" />
             </Toggle>
 
-            <Select
-              value={options.reasoningEffort}
-              onValueChange={(value) =>
-                setOptions({ ...options, reasoningEffort: value })
-              }
-            >
-              <SelectTrigger className="w-[100px] h-9 border-white/20 bg-background text-white hover:bg-white/5">
-                <SelectValue placeholder="Reasoning" />
-              </SelectTrigger>
-              <SelectContent className="border-white/20 bg-background">
-                <SelectItem
-                  className="text-white hover:bg-white/10 focus:bg-white/10"
-                  value="low"
-                >
-                  Low
-                </SelectItem>
-                <SelectItem
-                  className="text-white hover:bg-white/10 focus:bg-white/10"
-                  value="medium"
-                >
-                  Medium
-                </SelectItem>
-                <SelectItem
-                  className="text-white hover:bg-white/10 focus:bg-white/10"
-                  value="high"
-                >
-                  High
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            {supportsReasoning && (
+              <Select
+                value={options.reasoningEffort}
+                onValueChange={(value) =>
+                  setOptions({ ...options, reasoningEffort: value })
+                }
+              >
+                <SelectTrigger className="w-[100px] h-9 border-white/20 bg-background text-white hover:bg-white/5">
+                  <SelectValue placeholder="Reasoning" />
+                </SelectTrigger>
+                <SelectContent className="border-white/20 bg-background">
+                  <SelectItem
+                    className="text-white hover:bg-white/10 focus:bg-white/10"
+                    value="low"
+                  >
+                    Low
+                  </SelectItem>
+                  <SelectItem
+                    className="text-white hover:bg-white/10 focus:bg-white/10"
+                    value="medium"
+                  >
+                    Medium
+                  </SelectItem>
+                  <SelectItem
+                    className="text-white hover:bg-white/10 focus:bg-white/10"
+                    value="high"
+                  >
+                    High
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
           <div>

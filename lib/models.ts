@@ -53,7 +53,7 @@ export const providerConfigs = (): Partial<
 });
 
 // Define a type for the function that returns a model instance
-type ModelFactory = (options?: Record<string, any>) => any;
+type ModelFactory = (modelId: string, options?: Record<string, any>) => any;
 
 export const getProviderByModelName = (
   name: string,
@@ -88,7 +88,7 @@ export const createModelInstanceFactory = (
 
   switch (provider) {
     case "openrouter":
-      modelFactory = (options?: Record<string, any>) =>
+      modelFactory = (modelId: string, options?: Record<string, any>) =>
         openrouter(modelId, options);
       break;
     default:
