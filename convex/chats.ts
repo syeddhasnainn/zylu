@@ -145,7 +145,6 @@ export const getChatThread = query({
 export const getAllChats = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
-    console.log("userId", userId);
 
     // if (!userId) {
     //   throw new Error("User not authenticated");

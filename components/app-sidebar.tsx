@@ -35,7 +35,6 @@ export function AppSidebar() {
   const { signOut } = useAuthActions();
   const router = useRouter();
   const user = useQuery(api.user.getUser, {});
-  console.log("user", user);
   const [search, setSearch] = useState("");
   // const [debouncedSearch, setDebouncedSearch] = useState("");
 

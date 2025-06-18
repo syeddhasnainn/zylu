@@ -38,7 +38,6 @@ function getGlobalStreamContext() {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const chatId = searchParams.get("chatId");
-  console.log("chatId from get route", chatId);
   const streamContext = getGlobalStreamContext();
 
   if (!streamContext) {
@@ -120,7 +119,6 @@ export async function GET(request: Request) {
 export async function POST(request: NextRequest) {
   const { chatid, model, options, messages } = await request.json();
 
-  console.log("DEBUG - chatid from route", chatid);
   // Extract the auth token from the Authorization header
   const authHeader = request.headers.get("Authorization");
 
@@ -143,7 +141,6 @@ export async function POST(request: NextRequest) {
       chatId: chatid,
     });
 
-    console.log("chatbyid", chat);
 
     if (!chat) {
       await convex.action(api.ai.generateTitleAndInsertChat, {

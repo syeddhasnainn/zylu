@@ -22,13 +22,9 @@ export function useAutoResume({
   setMessages,
 }: Props) {
   useEffect(() => {
-    console.log("DEBUG - autoResume:", autoResume);
-    console.log("DEBUG - initialMessages:", initialMessages);
-
     if (!autoResume) return;
 
     const mostRecentMessage = initialMessages.at(-1);
-    console.log("mostRecentMessage: ", mostRecentMessage);
 
     if (mostRecentMessage?.role === "user") {
       experimental_resume();

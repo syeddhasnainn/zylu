@@ -39,19 +39,16 @@ export const generateTitleAndInsertChat = action({
     userMessage: v.string(),
   },
   handler: async (ctx, args) => {
-    console.log("Starting title generation for chatId:", args.chatId);
 
     try {
       const title = await ctx.runAction(api.ai.generateChatTitle, {
         query: args.userMessage,
       });
-      console.log("Generated title:", title);
 
       await ctx.runMutation(api.chats.insertChat, {
         chatId: args.chatId,
         title: title,
       });
-      console.log("Successfully inserted chat");
     } catch (error) {
       console.error("Error in generateTitleAndInsertChat:", error);
       throw error;
