@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/chat",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
