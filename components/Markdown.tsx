@@ -22,7 +22,7 @@ function PureMarkdownRendererBlock({ content }: { content: string }) {
       const language = match ? match[1] : "text";
       return !inline && match ? (
         <div className="my-6">
-          <div className="flex justify-between bg-base-300 text-foreground px-4 py-1.5 rounded-t-lg border border-white/10 border-b-0 text-sm bg-accent">
+          <div className="flex justify-between bg-accent text-foreground px-4 py-1.5 rounded-t-md border border-white/10 border-b-0 text-sm">
             {language}
             <button
               className="ml-2"
@@ -38,7 +38,7 @@ function PureMarkdownRendererBlock({ content }: { content: string }) {
             PreTag="div"
             language={language}
             style={dark}
-            className="!bg-accent shadow-md border border-white/10 rounded-b-lg px-4 py-2 leading-6 !m-0"
+            className="!bg-sidebar-background shadow-md border border-white/10 rounded-b-lg px-4 py-2 leading-6 !m-0"
           >
             {children}
           </SyntaxHighlighter>

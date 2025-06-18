@@ -78,7 +78,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               Settings
             </DialogTitle>
             <DialogDescription>
-              Customize your Zylo experience with keyboard shortcuts, system
+              Customize your Zylu experience with keyboard shortcuts, system
               prompts, and API configurations.
             </DialogDescription>
           </DialogHeader>
@@ -88,14 +88,14 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         <div className="flex-1 overflow-y-auto p-6">
           <Tabs defaultValue="shortcuts" className="w-full">
             <div className="sticky top-0 bg-background z-10 pb-4">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger
+              <TabsList className="grid w-full grid-cols-2">
+                {/* <TabsTrigger
                   value="shortcuts"
                   className="flex items-center gap-2"
                 >
                   <Keyboard className="h-4 w-4" />
                   Shortcuts
-                </TabsTrigger>
+                </TabsTrigger> */}
                 <TabsTrigger value="prompt" className="flex items-center gap-2">
                   <MessageSquare className="h-4 w-4" />
                   System Prompt
@@ -107,7 +107,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </TabsList>
             </div>
 
-            <TabsContent value="shortcuts" className="space-y-4">
+            {/* <TabsContent value="shortcuts" className="space-y-4">
               <Card>
                 <CardHeader>
                   <CardTitle>Keyboard Shortcuts</CardTitle>
@@ -129,7 +129,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   ))}
                 </CardContent>
               </Card>
-            </TabsContent>
+            </TabsContent> */}
 
             <TabsContent value="prompt" className="space-y-4">
               <Card>

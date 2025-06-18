@@ -85,8 +85,8 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem className="text-lg font-bold">Zylo</SidebarMenuItem>
+        <SidebarMenu className="pb-2">
+          <SidebarMenuItem className="text-xl font-bold">Zylu</SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
           <div className="space-y-2">
