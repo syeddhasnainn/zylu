@@ -16,6 +16,8 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
+import { fetchAction, fetchMutation, fetchQuery } from "convex/nextjs";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -140,6 +142,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
 
+  const token = await convexAuthNextjsToken();
+
   const { chatid, model, options, messages, systemPrompt, apiKey } =
     await request.json();
 
@@ -154,86 +158,97 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const token = authHeader.substring(7);
-
   const streamId = generateId();
 
-  try {
-    // Create a Convex client with authentication
-    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-    convex.setAuth(token);
+  const userMessage = messages[messages.length - 1];
 
-    const userMessage = messages[messages.length - 1];
-
-    const chat = await convex.query(api.chats.getChatById, {
+  const chat = await fetchQuery(
+    api.chats.getChatById,
+    {
       chatId: chatid,
-    });
+    },
+    { token },
+  );
 
-    if (!chat) {
-      await convex.action(api.ai.generateTitleAndInsertChat, {
+  if (!chat) {
+    await fetchAction(
+      api.ai.generateTitleAndInsertChat,
+      {
         chatId: chatid,
         userMessage: userMessage.content,
-      });
-    }
+      },
+      { token },
+    );
+  }
 
-    await convex.mutation(api.chats.appendStreamId, {
+  await fetchMutation(
+    api.chats.appendStreamId,
+    {
       chatId: chatid,
       streamId: streamId,
-    });
+    },
+    { token },
+  );
 
-    let attachments: any[] = [];
+  let attachments: any[] = [];
 
-    if (userMessage.experimental_attachments) {
-      attachments = userMessage.experimental_attachments.map(
-        (attachment: any) => {
-          return {
-            type: "image",
-            image: attachment.url,
-          };
-        },
-      );
-    }
+  if (userMessage.experimental_attachments) {
+    attachments = userMessage.experimental_attachments.map(
+      (attachment: any) => {
+        return {
+          type: "image",
+          image: attachment.url,
+        };
+      },
+    );
+  }
 
-    // Insert the user message
-    await convex.mutation(api.chats.insertMessageWithAuth, {
+  // Insert the user message
+  await fetchMutation(
+    api.chats.insertMessageWithAuth,
+    {
       chatId: chatid,
       role: "user",
       parts: [{ type: "text", text: userMessage.content }, ...attachments],
       model: model,
-    });
+    },
+    { token },
+  );
 
-    const modelInfo = getProviderByModelName(model);
+  const modelInfo = getProviderByModelName(model);
 
-    if (!modelInfo) {
-      throw new Error("Provider not found");
-    }
+  if (!modelInfo) {
+    throw new Error("Provider not found");
+  }
 
-    const { instanceFactory, config } = modelInfo;
+  const { instanceFactory, config } = modelInfo;
 
-    const reasoningOption = {
-      reasoning: {
-        effort: options.reasoningEffort,
-      },
-    };
+  const reasoningOption = {
+    reasoning: {
+      effort: options.reasoningEffort,
+    },
+  };
 
-    const stream = createDataStream({
-      execute: (dataStream) => {
-        const result = streamText({
-          model: openrouter(
-            options.webSearch ? `${model}:online` : model,
-            config.capabilities.supportsReasoning ? reasoningOption : {},
-          ),
-          messages,
+  const stream = createDataStream({
+    execute: (dataStream) => {
+      const result = streamText({
+        model: openrouter(
+          options.webSearch ? `${model}:online` : model,
+          config.capabilities.supportsReasoning ? reasoningOption : {},
+        ),
+        messages,
 
-          experimental_transform: smoothStream({
-            chunking: "word",
-          }),
+        experimental_transform: smoothStream({
+          chunking: "word",
+        }),
 
-          system: `${systemPrompt}. You are a helpful assistant that can answer questions and help with tasks. When presenting mathematical equations or formulas, format them using the following structure: Begin each section with a descriptive title in bold markdown formatting, followed by the equation rendered in LaTeX display mode using double dollar signs. For multiple related equations, group them using the aligned environment within a single display math block, ensuring proper alignment using ampersands before equal signs and double backslashes between lines. Each equation should be properly spaced with blank lines separating different mathematical concepts or topics. Use standard LaTeX notation for all mathematical symbols, operators, vectors, matrices, and special functions. Ensure that complex equations like differential equations, matrix operations, integrals, and multi-line derivations are clearly formatted with appropriate mathematical typography. Always use display mode rather than inline math to make the equations prominent and readable`,
+        system: `${systemPrompt}. You are a helpful assistant that can answer questions and help with tasks. When presenting mathematical equations or formulas, format them using the following structure: Begin each section with a descriptive title in bold markdown formatting, followed by the equation rendered in LaTeX display mode using double dollar signs. For multiple related equations, group them using the aligned environment within a single display math block, ensuring proper alignment using ampersands before equal signs and double backslashes between lines. Each equation should be properly spaced with blank lines separating different mathematical concepts or topics. Use standard LaTeX notation for all mathematical symbols, operators, vectors, matrices, and special functions. Ensure that complex equations like differential equations, matrix operations, integrals, and multi-line derivations are clearly formatted with appropriate mathematical typography. Always use display mode rather than inline math to make the equations prominent and readable`,
 
-          onFinish: async (message) => {
-            // Insert the assistant message
-            await convex.mutation(api.chats.insertMessageWithAuth, {
+        onFinish: async (message) => {
+          // Insert the assistant message
+          await fetchMutation(
+            api.chats.insertMessageWithAuth,
+            {
               chatId: chatid,
               role: "assistant",
               parts: config.capabilities.supportsReasoning
@@ -243,41 +258,34 @@ export async function POST(request: NextRequest) {
                   ]
                 : [{ type: "text", text: message.text }],
               model: model,
-            });
-          },
+            },
+            { token },
+          );
+        },
 
-          onError: (error) => {
-            console.error("Error in stream", error);
-          },
-        });
+        onError: (error) => {
+          console.error("Error in stream", error);
+        },
+      });
 
-        result.consumeStream();
+      result.consumeStream();
 
-        result.mergeIntoDataStream(dataStream, {
-          sendReasoning: true,
-        });
-      },
-    });
+      result.mergeIntoDataStream(dataStream, {
+        sendReasoning: true,
+      });
+    },
+  });
 
-    const streamContext = getGlobalStreamContext();
-    if (streamContext) {
-      return new Response(
-        await streamContext.resumableStream(streamId, () => stream),
-      );
-    } else {
-      return new Response(stream);
-    }
-
-    // return new Response(
-    //   await streamContext.resumableStream(streamId, () => stream),
-    // );
-  } catch (error) {
-    console.error("Authentication or processing error:", error);
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Authentication failed",
-      },
-      { status: 401 },
+  const streamContext = getGlobalStreamContext();
+  if (streamContext) {
+    return new Response(
+      await streamContext.resumableStream(streamId, () => stream),
     );
+  } else {
+    return new Response(stream);
   }
+
+  // return new Response(
+  //   await streamContext.resumableStream(streamId, () => stream),
+  // );
 }
