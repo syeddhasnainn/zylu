@@ -4,8 +4,6 @@ export default function ChatPage() {
   const chatid = crypto.randomUUID();
 
   return (
-    <>
-      <ChatInterface chatid={chatid} initialMessages={[]} autoResume={false} />
-    </>
+    <ChatInterface chatid={chatid} initialMessages={[]} autoResume={false} />
   );
 }

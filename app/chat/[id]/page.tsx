@@ -1,11 +1,7 @@
 import ChatInterface from "@/components/chat-interface";
-import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { DataModel } from "@/convex/_generated/dataModel";
-import { UIMessage, Attachment } from "ai";
-import { preloadQuery, fetchQuery } from "convex/nextjs";
+import { preloadQuery, fetchQuery, preloadedQueryResult } from "convex/nextjs";
 import { convertToUIMessages } from "@/lib/utils";
-import { getAuthUserId } from "@convex-dev/auth/server";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 
 export default async function ChatPage(props: {
@@ -14,13 +10,18 @@ export default async function ChatPage(props: {
   const params = await props.params;
   const { id } = params;
 
-  const initialMessages = await fetchQuery(api.chats.getChatMessages, {
-    chatId: id,
-  });
+  const token = await convexAuthNextjsToken();
+  const preloadedMessages = await preloadQuery(
+    api.chats.getChatMessages,
+    {
+      chatId: id,
+    },
+    {
+      token,
+    },
+  );
 
-  // const messages = initialMessages._valueJSON;
-
-  // console.log(messages);
+  const initialMessages = preloadedQueryResult(preloadedMessages);
 
   return (
     <ChatInterface

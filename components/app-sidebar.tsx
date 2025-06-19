@@ -81,8 +81,7 @@ export function AppSidebar() {
       debouncedSearch ? api.chats.searchChat : api.chats.getAllChats,
       debouncedSearch ? { title: debouncedSearch } : {},
     ], // Dynamic query key based on search state
-    placeholderData: (previousData) => previousData, // Keep previous data while new data loads
-    // keepPreviousData: true, // Alternative to placeholderData for similar effect
+     // Keep previous data while new data loads
   });
 
   // const chats = useQuery(api.chats.getAllChats, {});
