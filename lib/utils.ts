@@ -1,3 +1,5 @@
+import { UIMessage } from "ai";
+import { DataModel } from "@/convex/_generated/dataModel";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -26,4 +28,18 @@ export function generateUUID(): string {
     const v = c === "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
+}
+
+export function convertToUIMessages(
+  messages: Array<DataModel["messages"]["document"]>,
+): Array<UIMessage> {
+  return messages.map((message) => ({
+    id: message._id,
+    parts: message.parts as UIMessage["parts"],
+    role: message.role as UIMessage["role"],
+    // Note: content will soon be deprecated in @ai-sdk/react
+    content: "",
+    createdAt: new Date(message.createdAt),
+    experimental_attachments: [],
+  }));
 }

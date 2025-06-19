@@ -14,6 +14,21 @@ import {
 } from "resumable-stream";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+const ratelimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "10s"),
+  analytics: true,
+  prefix: "zylu-ratelimit",
+});
+
 let globalStreamContext: ResumableStreamContext | null = null;
 
 function getGlobalStreamContext() {
@@ -118,6 +133,13 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: NextRequest) {
+  const identifier = "api";
+  const { success } = await ratelimit.limit(identifier);
+
+  if (!success) {
+    return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+  }
+
   const { chatid, model, options, messages, systemPrompt, apiKey } =
     await request.json();
 

@@ -4,6 +4,7 @@ import { Loader } from "@/components/ui/loader";
 import { ChevronDown } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
 import type { UseChatHelpers } from "@ai-sdk/react";
+import ReasoningBlock from "./reasoning-block";
 
 export default function ChatMessages({
   messages,
@@ -12,16 +13,44 @@ export default function ChatMessages({
   messages: UseChatHelpers["messages"];
   status: UseChatHelpers["status"];
 }) {
+  console.log(messages);
   return (
     <div className="pb-16 pt-10 space-y-6 text-white">
       {messages.map((message) => (
-        <div key={message.id} className="space-y-3">
+        <div key={message.id} className="space-y-3 flex">
           {message.role === "user" && (
-            <div className="flex justify-end">
-              <div className="border border-white/20 px-4 py-3 max-w-fit rounded-2xl bg-white/5">
-                {message.parts[0].type === "text" ? message.parts[0].text : ""}
-              </div>
+            <div className="flex flex-col-reverse items-end gap-2 ml-auto">
+              {message.parts.map((part: any, i: number) => {
+                switch (part.type) {
+                  case "text":
+                    return (
+                      <div
+                        className="max-w-fit rounded-xl object-cover shadow-sm border border-white/20 p-3"
+                        key={`${message.id}-${i}`}
+                      >
+                        {part.text}
+                      </div>
+                    );
+                  case "image":
+                    return (
+                      <div className="items-start" key={`${message.id}-${i}`}>
+                        <img
+                          className="rounded-xl object-cover shadow-sm border border-white/20"
+                          height={150}
+                          width={150}
+                          src={part.image}
+                          alt=""
+                        />
+                      </div>
+                    );
+                }
+              })}
             </div>
+            // <div className="flex justify-end">
+            //   <div className="border border-white/20 px-4 py-3 max-w-fit rounded-2xl bg-white/5">
+            //     {message.parts[0].type === "text" ? message.parts[0].text : ""}
+            //   </div>
+            // </div>
           )}
           {message.role === "assistant" && (
             <div className="space-y-4">
@@ -29,7 +58,7 @@ export default function ChatMessages({
                 switch (part.type) {
                   case "reasoning":
                     return (
-                      <MemoizedDropown
+                      <ReasoningBlock
                         key={`${message.id}-${i}`}
                         reasoning={part.reasoning}
                       />
@@ -57,30 +86,3 @@ export default function ChatMessages({
     </div>
   );
 }
-
-function ReasoningDropdown({ reasoning }: { reasoning: string }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  return (
-    <div className="mb-4">
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-sm font-medium"
-      >
-        <span
-          className={`transform transition-transform ${isExpanded ? "rotate-180" : ""}`}
-        >
-          <ChevronDown size={16} />
-        </span>
-        <span>Reasoning</span>
-      </button>
-      {isExpanded && (
-        <div className="mt-3 p-4 border-l-2 border-white/20 bg-white/5 text-white/90 text-sm rounded-r-lg">
-          <div className="whitespace-pre-wrap">{reasoning}</div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-const MemoizedDropown = memo(ReasoningDropdown);

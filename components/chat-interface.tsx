@@ -5,7 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import { useAutoResume } from "@/hooks/use-auto-resume";
 import { useAuthToken } from "@convex-dev/auth/react";
 import { UIMessage } from "ai";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export default function ChatInterface({

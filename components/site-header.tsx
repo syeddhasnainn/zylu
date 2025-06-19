@@ -1,17 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useConvexAuth } from "convex/react";
-import { useAuthActions } from "@convex-dev/auth/react";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function SiteHeader() {
   const router = useRouter();
-  const { isAuthenticated } = useConvexAuth();
-  console.log("isAuthenticated", isAuthenticated);
-  const { signOut } = useAuthActions();
+  router.prefetch("/chat");
 
   return (
     <header className="sticky top-0 z-50 flex h-(--header-height) shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">

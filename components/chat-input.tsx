@@ -18,6 +18,7 @@ import { Attachment } from "@ai-sdk/ui-utils";
 import { Toggle } from "./ui/toggle";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import Grok, { DeepSeek, Gemini, OpenAI, Qwen } from "@/lib/icons";
+import Image from "next/image";
 
 export default function ChatInput({
   chatid,
@@ -68,6 +69,7 @@ export default function ChatInput({
   const customHandleSubmit = () => {
     window.history.replaceState({}, "", `/chat/${chatid}`);
 
+    setAttachments([]);
     handleSubmit(undefined, {
       experimental_attachments: attachments,
     });
@@ -121,6 +123,7 @@ export default function ChatInput({
     });
 
     const results = await Promise.allSettled(uploadPromises);
+
     const validAttachments = results
       .filter((result) => result.status === "fulfilled")
       .map((result) => result.value);
@@ -270,7 +273,7 @@ export default function ChatInput({
                 <ArrowUp className="text-white/70" size={16} />
               </Button>
             )}
-            {status === "submitted" && (
+            {(status === "submitted" || status === "streaming") && (
               <Button
                 onClick={stop}
                 className="h-9 w-9 cursor-pointer border border-white/20 bg-background hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"

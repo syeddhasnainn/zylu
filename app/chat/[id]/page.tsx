@@ -4,6 +4,9 @@ import { api } from "@/convex/_generated/api";
 import { DataModel } from "@/convex/_generated/dataModel";
 import { UIMessage, Attachment } from "ai";
 import { preloadQuery, fetchQuery } from "convex/nextjs";
+import { convertToUIMessages } from "@/lib/utils";
+import { getAuthUserId } from "@convex-dev/auth/server";
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 
 export default async function ChatPage(props: {
   params: Promise<{ id: string }>;
@@ -15,6 +18,10 @@ export default async function ChatPage(props: {
     chatId: id,
   });
 
+  // const messages = initialMessages._valueJSON;
+
+  // console.log(messages);
+
   return (
     <ChatInterface
       chatid={id}
@@ -22,18 +29,4 @@ export default async function ChatPage(props: {
       initialMessages={convertToUIMessages(initialMessages)}
     />
   );
-}
-
-function convertToUIMessages(
-  messages: Array<DataModel["messages"]["document"]>,
-): Array<UIMessage> {
-  return messages.map((message) => ({
-    id: message._id,
-    parts: message.parts as UIMessage["parts"],
-    role: message.role as UIMessage["role"],
-    // Note: content will soon be deprecated in @ai-sdk/react
-    content: "",
-    createdAt: new Date(message.createdAt),
-    experimental_attachments: [],
-  }));
 }

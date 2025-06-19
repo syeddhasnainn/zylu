@@ -37,16 +37,24 @@ import { CirclePlus } from "lucide-react";
 import { useMutation } from "convex/react";
 import { SettingsDialog } from "@/components/settings-dialog";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/convex/auth";
 
 export function AppSidebar() {
   const { signOut } = useAuthActions();
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
+
+  useEffect(() => {
+    router.prefetch("/chat");
+  }, []);
+
   const user = useQuery({
     ...convexQuery(api.user.getUser, {}),
   });
+
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -94,7 +102,6 @@ export function AppSidebar() {
               className="w-full flex items-center justify-start just gap-2 cursor-pointer"
               onClick={() => {
                 router.push("/chat");
-                router.refresh();
               }}
             >
               <CirclePlus />
