@@ -9,6 +9,26 @@ export const providerConfigs = (): Partial<
   openrouter: {
     models: [
       {
+        id: "x-ai/grok-3-mini-beta",
+        name: "Grok-3-Mini (beta)",
+        provider: "openrouter",
+        maxTokens: 16384,
+        capabilities: {
+          supportsImages: true,
+          supportsReasoning: true,
+        },
+      },
+      {
+        id: "google/gemini-2.5-flash-lite-preview-06-17",
+        name: "Gemini-2.5-Flash-Lite",
+        provider: "openrouter",
+        maxTokens: 8192,
+        capabilities: {
+          supportsImages: true,
+          supportsReasoning: false,
+        },
+      },
+      {
         id: "openai/gpt-4.1-nano",
         name: "GPT-4.1-Nano",
         provider: "openrouter",
@@ -35,7 +55,7 @@ export const providerConfigs = (): Partial<
         maxTokens: 4096,
         capabilities: {
           supportsImages: true,
-          supportsReasoning: false,
+          supportsReasoning: true,
         },
       },
       {

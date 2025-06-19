@@ -2,7 +2,7 @@ import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { api } from "./_generated/api";
-
+import { DataModel } from "./_generated/dataModel";
 export const insertChat = mutation({
   args: {
     chatId: v.string(),
@@ -30,7 +30,10 @@ export const insertChat = mutation({
 
 export const deleteChat = mutation({
   args: {
-    chatId: v.id("chats"),
+    chatObj: v.object({
+      id: v.id("chats"),
+      chatId: v.string(),
+    }),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -39,7 +42,16 @@ export const deleteChat = mutation({
       throw new Error("User not authenticated");
     }
 
-    await ctx.db.delete(args.chatId);
+    const relatedMessages = await ctx.db
+      .query("messages")
+      .filter((q) => q.eq(q.field("chatId"), args.chatObj.chatId))
+      .collect();
+
+    relatedMessages.forEach(async (message) => {
+      await ctx.db.delete(message._id);
+    });
+
+    await ctx.db.delete(args.chatObj.id);
   },
 });
 

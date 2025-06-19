@@ -18,7 +18,9 @@ export default function ChatInterface({
   autoResume: boolean;
 }) {
   const user = useAuthToken();
-  const [model, setModel] = useState("openai/gpt-4.1-nano");
+  const [model, setModel] = useState(
+    localStorage.getItem("model") || "openai/gpt-4.1-nano",
+  );
   const [options, setOptions] = useState({
     reasoningEffort: "low",
     webSearch: false,

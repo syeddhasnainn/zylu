@@ -205,7 +205,6 @@ export async function POST(request: NextRequest) {
 
           experimental_transform: smoothStream({
             chunking: "word",
-            delayInMs: 10,
           }),
 
           system: `${systemPrompt}. You are a helpful assistant that can answer questions and help with tasks. When presenting mathematical equations or formulas, format them using the following structure: Begin each section with a descriptive title in bold markdown formatting, followed by the equation rendered in LaTeX display mode using double dollar signs. For multiple related equations, group them using the aligned environment within a single display math block, ensuring proper alignment using ampersands before equal signs and double backslashes between lines. Each equation should be properly spaced with blank lines separating different mathematical concepts or topics. Use standard LaTeX notation for all mathematical symbols, operators, vectors, matrices, and special functions. Ensure that complex equations like differential equations, matrix operations, integrals, and multi-line derivations are clearly formatted with appropriate mathematical typography. Always use display mode rather than inline math to make the equations prominent and readable`,

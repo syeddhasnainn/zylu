@@ -13,13 +13,11 @@ import { Globe, Paperclip, StopCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { ArrowUp } from "lucide-react";
 import { getModels } from "@/lib/models";
-import { useChat } from "@ai-sdk/react";
 import { useAuthToken } from "@convex-dev/auth/react";
 import { Attachment } from "@ai-sdk/ui-utils";
 import { Toggle } from "./ui/toggle";
 import type { UseChatHelpers } from "@ai-sdk/react";
-import { DeepSeek, Gemini, OpenAI, Qwen } from "@/lib/icons";
-import { saveChatModelAsCookie } from "@/lib/actions";
+import Grok, { DeepSeek, Gemini, OpenAI, Qwen } from "@/lib/icons";
 
 export default function ChatInput({
   chatid,
@@ -140,7 +138,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className="flex flex-col border-2 border-white/10 rounded-t-lg sticky bottom-0 max-w-3xl w-full bg-background">
+    <div className="flex flex-col border border-white/10 rounded-t-lg sticky bottom-0 max-w-3xl w-full bg-background">
       {attachments.length > 0 && (
         <div className="flex flex-row gap-3 px-4 pt-4 pb-2">
           {attachments.map((attachment, index) => (
@@ -173,7 +171,7 @@ export default function ChatInput({
               value={model}
               onValueChange={(value) => {
                 setModel(value);
-                saveChatModelAsCookie(value);
+                localStorage.setItem("model", value);
               }}
             >
               <SelectTrigger className="w-[180px] h-9 border-white/20 bg-background text-white hover:bg-white/5">
@@ -187,6 +185,7 @@ export default function ChatInput({
                     value={model.id}
                   >
                     <div className="flex items-center gap-2">
+                      {model.id.includes("grok") && <Grok />}
                       {model.id.includes("openai") && <OpenAI />}
                       {model.id.includes("deepseek") && <DeepSeek />}
                       {model.id.includes("qwen") && <Qwen />}

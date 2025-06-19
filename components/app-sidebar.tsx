@@ -145,7 +145,13 @@ export function AppSidebar() {
                           <DropdownMenuItem
                             className="cursor-pointer text-destructive focus:text-destructive"
                             onClick={async () => {
-                              await deleteChat({ chatId: item._id });
+                              await deleteChat({
+                                chatObj: {
+                                  id: item._id,
+                                  chatId: item.id,
+                                },
+                              });
+                              router.push("/chat");
                             }}
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
