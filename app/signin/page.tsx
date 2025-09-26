@@ -1,24 +1,67 @@
 "use client";
 import { useAuthActions } from "@convex-dev/auth/react";
 import type { SVGProps } from "react";
+import { useState } from "react";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
 
 export default function Signin() {
   const { signIn } = useAuthActions();
+  const [clicked, setClicked] = useState(false);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen w-full">
-      <div className="mb-8 text-center"></div>
-      <button
-        className="border-2 border-white/20 bg-dark dark:bg-light text-light dark:text-dark rounded-md px-6 py-3 text-base font-medium hover:opacity-90 transition-opacity flex items-center gap-3"
-        onClick={() =>
-          void signIn("google", {
-            redirectTo: "/chat",
-          })
-        }
-      >
-        <Google />
-        Sign in with Google
-      </button>
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-slate-950 px-6 py-16 text-slate-100 dark:bg-slate-100 dark:text-slate-900">
+      <div className="pointer-events-none absolute -top-24 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-indigo-500/30 blur-3xl dark:bg-indigo-400/40" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 translate-x-1/3 translate-y-1/3 rounded-full bg-purple-500/30 blur-3xl dark:bg-purple-400/40" />
+
+      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-white/5 bg-clip-padding p-10 backdrop-blur-xl dark:border-slate-200/50 dark:bg-white/80">
+        <div className="mb-10 space-y-4 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-white/70 dark:border-slate-300/70 dark:text-slate-500">
+            Welcome to Zylu
+          </span>
+          <div className="space-y-2">
+            <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+              Sign in to continue
+            </h1>
+            <p className="text-sm text-white/70 dark:text-slate-600">
+              Connect your Google account to sync your conversations securely
+              and pick up right where you left off.
+            </p>
+          </div>
+        </div>
+
+        {!clicked ? (
+          <button
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-base font-medium text-white transition-all duration-200 hover:-translate-y-[1px] hover:border-white/40 hover:bg-white/20 focus-visible:outline-offset-2 focus-visible:outline-white/60 dark:border-slate-300/70 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-400 dark:hover:bg-slate-800"
+            onClick={() => {
+              setClicked(true);
+
+              void signIn("google", {
+                redirectTo: "/chat",
+              });
+            }}
+          >
+            <Google className="h-5 w-5" />
+            Sign in with Google
+          </button>
+        ) : (
+          <button
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-base font-medium text-white transition-all duration-200 hover:-translate-y-[1px] hover:border-white/40 hover:bg-white/20 focus-visible:outline-offset-2 focus-visible:outline-white/60 dark:border-slate-300/70 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-400 dark:hover:bg-slate-800"
+            onClick={() => {
+              setClicked(true);
+
+              void signIn("google", {
+                redirectTo: "/chat",
+              });
+            }}
+          >
+            <Spinner />
+          </button>
+        )}
+
+        <p className="mt-6 text-center text-xs text-white/50 dark:text-slate-500">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
+        </p>
+      </div>
     </div>
   );
 }
