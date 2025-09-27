@@ -54,7 +54,8 @@ export default function ChatInterface({
     },
 
     onError: (error) => {
-      toast.error(error.message);
+      console.log("from sonner", error);
+      toast.error(error.name);
     },
   });
 

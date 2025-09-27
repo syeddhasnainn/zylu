@@ -29,16 +29,6 @@ export const providerConfigs = (): Partial<
         },
       },
       {
-        id: "openai/gpt-4.1-nano",
-        name: "GPT-4.1-Nano",
-        provider: "openrouter",
-        maxTokens: 8192,
-        capabilities: {
-          supportsImages: true,
-          supportsReasoning: false,
-        },
-      },
-      {
         id: "deepseek/deepseek-r1-0528",
         name: "DeepSeek-R1",
         provider: "openrouter",

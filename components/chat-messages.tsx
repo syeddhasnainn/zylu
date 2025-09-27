@@ -43,6 +43,14 @@ export default function ChatMessages({
                         />
                       </div>
                     );
+                  case "error":
+                    return (
+                      <div className="flex justify-end">
+                        <div className="border border-white/20 px-4 py-3 max-w-fit rounded-2xl bg-white/5">
+                          {part.error}
+                        </div>
+                      </div>
+                    );
                 }
               })}
             </div>
