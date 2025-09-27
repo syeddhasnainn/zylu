@@ -61,7 +61,7 @@ export default function ChatMessages({
             // </div>
           )}
           {message.role === "assistant" && (
-            <div className="space-y-4">
+            <div className="space-y-4 min-w-0 flex-1">
               {message.parts.map((part: any, i: number) => {
                 switch (part.type) {
                   case "reasoning":
@@ -75,7 +75,7 @@ export default function ChatMessages({
                     return (
                       <div
                         key={`${message.id}-${i}`}
-                        className="prose prose-invert max-w-none"
+                        className="prose prose-invert max-w-none overflow-hidden"
                       >
                         <Markdown>{part.text}</Markdown>
                       </div>

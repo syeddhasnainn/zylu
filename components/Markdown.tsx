@@ -31,17 +31,19 @@ function PureMarkdownRendererBlock({ content }: { content: string }) {
               <Copy width={14} height={14} />
             </button>
           </div>
-          <SyntaxHighlighter
-            {...props}
-            wrapLines
-            wrapLongLines
-            PreTag="div"
-            language={language}
-            style={dark}
-            className="!bg-sidebar !border-none rounded-b-lg px-4 py-2 leading-6 !m-0"
-          >
-            {children}
-          </SyntaxHighlighter>
+          <div className="overflow-x-auto">
+            <SyntaxHighlighter
+              {...props}
+              wrapLines
+              wrapLongLines
+              PreTag="div"
+              language={language}
+              style={dark}
+              className="!bg-sidebar !border-none rounded-b-lg px-4 py-2 leading-6 !m-0 min-w-0"
+            >
+              {children}
+            </SyntaxHighlighter>
+          </div>
         </div>
       ) : (
         <code
