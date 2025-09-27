@@ -161,7 +161,7 @@ export default function ChatInput({
       <div className="p-4 space-y-4">
         <textarea
           onKeyDown={handleKeyDown}
-          className="resize-none outline-none w-full text-base placeholder:text-muted-foreground bg-transparent text-white"
+          className="resize-none outline-none w-full text-base placeholder:text-muted-foreground bg-transparent text-muted-foreground"
           placeholder="Ask me anything..."
           value={input}
           onChange={handleInputChange}
@@ -225,7 +225,7 @@ export default function ChatInput({
                 setOptions({ ...options, webSearch: pressed })
               }
             >
-              <Globe className="h-4 w-4"  />
+              <Globe className="h-4 w-4" />
             </Toggle>
 
             {supportsReasoning && (

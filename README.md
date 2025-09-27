@@ -1,12 +1,11 @@
 # Zylu - AI Chat Application
 
-A powerful, full-stack AI chat application built with modern web technologies and advanced AI capabilities. Zylu provides a seamless conversational experience with cutting-edge AI models, persistent conversations, and intelligent web search integration.
+A powerful, full-stack AI chat application built with modern web technologies and advanced AI capabilities. Zylu provides a seamless conversational experience with cutting-edge AI models, and intelligent web search integration.
 
 ## ✨ Key Features
 
 ### 🤖 **Advanced AI Integration**
 
-- **Persistent Text Streaming**: Real-time streaming responses with conversation persistence
 - **Bring Your Own Key (BYOK)**: Secure integration with OpenRouter using your own API keys
 - **Multimodal Support**: Handle text, images, and other media types in conversations
 
@@ -95,12 +94,6 @@ This application is built with a modern, production-ready stack:
 
 ### Key Features Guide
 
-#### **Persistent Streaming**
-
-- All conversations are automatically saved and synced in real-time
-- Resume conversations from any device
-- Full conversation history with search capabilities
-
 #### **Reasoning Models**
 
 - Access to advanced reasoning models for complex problem-solving
@@ -130,44 +123,6 @@ Configure your OpenRouter settings in the app:
 3. Select your preferred models
 4. Configure usage limits and preferences
 
-### Authentication Setup
-
-The app supports multiple authentication methods:
-
-- Email/Password
-- OAuth providers (Google, GitHub, etc.)
-- Magic links
-
-For detailed authentication configuration, see the [Convex Auth documentation](https://labs.convex.dev/auth/config).
-
-## 📚 Learn More
-
-### Convex Resources
-
-- [Tour of Convex](https://docs.convex.dev/get-started) - Introduction to Convex principles
-- [Convex Documentation](https://docs.convex.dev/) - Complete feature documentation
-- [Convex Stack](https://stack.convex.dev/) - Advanced topics and best practices
-
-### AI & Chat Features
-
-- [OpenRouter Documentation](https://openrouter.ai/docs) - API integration guide
-- [Multimodal AI Best Practices](https://docs.openai.com/guides/vision) - Working with images and media
-- [Streaming Chat Implementation](https://docs.convex.dev/functions/streaming) - Real-time streaming patterns
-
-## 🤝 Contributing
-
-We welcome contributions! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
-
-## 🛟 Support & Community
-
-- **Issues**: Report bugs or request features via [GitHub Issues](../../issues)
-- **Convex Community**: Join the [Convex Discord](https://convex.dev/community) for technical support
-- **Documentation**: Check our [docs](../../wiki) for detailed guides
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-**Built with ❤️ using Convex, Next.js, and modern AI technologies**

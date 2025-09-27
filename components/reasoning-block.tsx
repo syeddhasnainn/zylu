@@ -8,7 +8,7 @@ function NonMemoizedReasoningBlock({ reasoning }: { reasoning: string }) {
     <div className="mb-4">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-sm font-medium"
+        className="flex items-center gap-2 text-muted-foreground transition-colors text-sm font-medium"
       >
         <span
           className={`transform transition-transform ${isExpanded ? "rotate-180" : ""}`}
@@ -18,7 +18,7 @@ function NonMemoizedReasoningBlock({ reasoning }: { reasoning: string }) {
         <span>Reasoning</span>
       </button>
       {isExpanded && (
-        <div className="mt-3 p-4 border-l-2 border-white/20 bg-white/5 text-white/90 text-sm rounded-r-lg">
+        <div className="mt-3 p-4 border-l bg-white/5 text-muted-foreground text-sm rounded-r-lg">
           <div className="whitespace-pre-wrap">{reasoning}</div>
         </div>
       )}
