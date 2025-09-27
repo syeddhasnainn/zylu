@@ -141,7 +141,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className="flex flex-col border border-white/10 rounded-t-lg sticky bottom-0 max-w-3xl w-full bg-background">
+    <div className="flex flex-col border rounded-t-lg sticky bottom-0 max-w-3xl w-full bg-background">
       {attachments.length > 0 && (
         <div className="flex flex-row gap-3 px-4 pt-4 pb-2">
           {attachments.map((attachment, index) => (
@@ -177,13 +177,13 @@ export default function ChatInput({
                 localStorage.setItem("model", value);
               }}
             >
-              <SelectTrigger className="w-[180px] h-9 border-white/20 bg-background text-white hover:bg-white/5">
+              <SelectTrigger className="w-[180px] h-9 border text-muted-foreground hover:bg-white/5">
                 <SelectValue placeholder="Select Model" />
               </SelectTrigger>
-              <SelectContent className="border-white/20 bg-background">
+              <SelectContent className="border">
                 {models.map((model: any) => (
                   <SelectItem
-                    className="text-white hover:bg-white/10 focus:bg-white/10"
+                    className="text-muted-foreground hover:bg-white/10 focus:bg-white/10"
                     key={model.id}
                     value={model.id}
                   >
@@ -202,10 +202,10 @@ export default function ChatInput({
 
             <button
               type="button"
-              className="flex items-center justify-center h-9 w-9 rounded-full border border-white/20 bg-background hover:bg-white/5 transition-colors cursor-pointer"
+              className="flex items-center justify-center h-9 w-9 rounded-full border hover:bg-white/5 transition-colors cursor-pointer"
               onClick={() => imageInput.current?.click()}
             >
-              <Paperclip className="text-white/70" size={16} />
+              <Paperclip className="text-muted-foreground" size={16} />
               <input
                 className="hidden"
                 type="file"
@@ -218,14 +218,14 @@ export default function ChatInput({
             </button>
 
             <Toggle
-              className="h-9 w-9 border border-white/20 bg-background hover:bg-white/5 data-[state=on]:bg-white/10 text-white/70"
+              className="h-9 w-9 border hover:bg-white/5 data-[state=on]:bg-white/10 text-muted-foreground"
               aria-label="Toggle web search"
               pressed={options.webSearch}
               onPressedChange={(pressed) =>
                 setOptions({ ...options, webSearch: pressed })
               }
             >
-              <Globe className="h-4 w-4" />
+              <Globe className="h-4 w-4"  />
             </Toggle>
 
             {supportsReasoning && (
@@ -235,24 +235,24 @@ export default function ChatInput({
                   setOptions({ ...options, reasoningEffort: value })
                 }
               >
-                <SelectTrigger className="w-[100px] h-9 border-white/20 bg-background text-white hover:bg-white/5">
+                <SelectTrigger className="w-[100px] h-9 border text-muted-foreground hover:bg-white/5">
                   <SelectValue placeholder="Reasoning" />
                 </SelectTrigger>
-                <SelectContent className="border-white/20 bg-background">
+                <SelectContent className="border">
                   <SelectItem
-                    className="text-white hover:bg-white/10 focus:bg-white/10"
+                    className="text-muted-foreground hover:bg-white/10 focus:bg-white/10"
                     value="low"
                   >
                     Low
                   </SelectItem>
                   <SelectItem
-                    className="text-white hover:bg-white/10 focus:bg-white/10"
+                    className="text-muted-foreground hover:bg-white/10 focus:bg-white/10"
                     value="medium"
                   >
                     Medium
                   </SelectItem>
                   <SelectItem
-                    className="text-white hover:bg-white/10 focus:bg-white/10"
+                    className="text-muted-foreground hover:bg-white/10 focus:bg-white/10"
                     value="high"
                   >
                     High
@@ -267,7 +267,7 @@ export default function ChatInput({
               <Button
                 disabled={!input.trim()}
                 onClick={handleSubmit}
-                className="h-9 w-9 cursor-pointer border border-white/20 bg-background hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-9 w-9 cursor-pointer border border-muted-foreground hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
                 size="icon"
               >
                 <ArrowUp className="text-white/70" size={16} />
@@ -276,10 +276,10 @@ export default function ChatInput({
             {(status === "submitted" || status === "streaming") && (
               <Button
                 onClick={stop}
-                className="h-9 w-9 cursor-pointer border border-white/20 bg-background hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-9 w-9 cursor-pointer border border-muted-foreground hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed"
                 size="icon"
               >
-                <StopCircle className="text-white/70" size={16} />
+                <StopCircle className="text-muted-foreground" size={16} />
               </Button>
             )}
           </div>

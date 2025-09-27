@@ -15,7 +15,7 @@ export default function ChatMessages({
 }) {
   console.log(messages);
   return (
-    <div className="pb-16 pt-10 space-y-6 text-white">
+    <div className="pb-16 pt-10 space-y-6 text-">
       {messages.map((message) => (
         <div key={message.id} className="space-y-3 flex">
           {message.role === "user" && (
@@ -25,7 +25,7 @@ export default function ChatMessages({
                   case "text":
                     return (
                       <div
-                        className="max-w-fit rounded-xl object-cover shadow-sm border border-white/20 p-3"
+                        className="max-w-fit rounded-xl object-cover border p-3"
                         key={`${message.id}-${i}`}
                       >
                         {part.text}
@@ -35,7 +35,7 @@ export default function ChatMessages({
                     return (
                       <div className="items-start" key={`${message.id}-${i}`}>
                         <img
-                          className="rounded-xl object-cover shadow-sm border border-white/20"
+                          className="rounded-xl object-cover shadow-sm border border-muted"
                           height={150}
                           width={150}
                           src={part.image}

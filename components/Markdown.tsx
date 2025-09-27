@@ -7,7 +7,7 @@ import "katex/dist/katex.min.css";
 import { marked } from "marked";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus as dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { vs as dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Copy } from "lucide-react";
 
 function parseMarkdownIntoBlocks(markdown: string): string[] {
@@ -38,7 +38,7 @@ function PureMarkdownRendererBlock({ content }: { content: string }) {
             PreTag="div"
             language={language}
             style={dark}
-            className="!bg-sidebar-background shadow-md  rounded-b-lg px-4 py-2 leading-6 !m-0"
+            className="!bg-sidebar !border-none rounded-b-lg px-4 py-2 leading-6 !m-0"
           >
             {children}
           </SyntaxHighlighter>

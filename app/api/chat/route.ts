@@ -19,17 +19,17 @@ import { Redis } from "@upstash/redis";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { fetchAction, fetchMutation, fetchQuery } from "convex/nextjs";
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+// const redis = new Redis({
+//   url: process.env.UPSTASH_REDIS_REST_URL!,
+//   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+// });
 
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(10, "10s"),
-  analytics: true,
-  prefix: "zylu-ratelimit",
-});
+// const ratelimit = new Ratelimit({
+//   redis,
+//   limiter: Ratelimit.slidingWindow(10, "10s"),
+//   analytics: true,
+//   prefix: "zylu-ratelimit",
+// });
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -39,11 +39,13 @@ function getGlobalStreamContext() {
       globalStreamContext = createResumableStreamContext({
         waitUntil: after, // Integrates with Vercel's `waitUntil` for background tasks
       });
+      console.log("redis error");
     } catch (error: any) {
       if (error.message.includes("REDIS_URL")) {
         console.log(
           " > Resumable streams are disabled due to missing REDIS_URL",
         );
+        console.log("redis error");
       } else {
         console.error(error);
       }
@@ -56,11 +58,11 @@ function getGlobalStreamContext() {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const chatId = searchParams.get("chatId");
-  const streamContext = getGlobalStreamContext();
+  // const streamContext = getGlobalStreamContext();
 
-  if (!streamContext) {
-    return new Response(null, { status: 204 });
-  }
+  // if (!streamContext) {
+  //   return new Response(null, { status: 204 });
+  // }
 
   const authHeader = request.headers.get("Authorization");
 
@@ -96,14 +98,14 @@ export async function GET(request: Request) {
     execute: () => {},
   });
 
-  const stream = await streamContext.resumableStream(
-    recentStreamId,
-    () => emptyDataStream,
-  );
+  // const stream = await streamContext.resumableStream(
+  //   recentStreamId,
+  //   () => emptyDataStream,
+  // );
 
-  if (stream) {
-    return new Response(stream, { status: 200 });
-  }
+  // if (stream) {
+  //   return new Response(stream, { status: 200 });
+  // }
 
   /*
    * For when the generation is "active" during SSR but the
@@ -135,12 +137,12 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: NextRequest) {
-  const identifier = "api";
-  const { success } = await ratelimit.limit(identifier);
+  // const identifier = "api";
+  // const { success } = await ratelimit.limit(identifier);
 
-  if (!success) {
-    return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
-  }
+  // if (!success) {
+  //   return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+  // }
 
   const token = await convexAuthNextjsToken();
 
@@ -181,14 +183,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  await fetchMutation(
-    api.chats.appendStreamId,
-    {
-      chatId: chatid,
-      streamId: streamId,
-    },
-    { token },
-  );
+  // await fetchMutation(
+  //   api.chats.appendStreamId,
+  //   {
+  //     chatId: chatid,
+  //     streamId: streamId,
+  //   },
+  //   { token },
+  // );
 
   let attachments: any[] = [];
 
@@ -276,14 +278,16 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  const streamContext = getGlobalStreamContext();
-  if (streamContext) {
-    return new Response(
-      await streamContext.resumableStream(streamId, () => stream),
-    );
-  } else {
-    return new Response(stream);
-  }
+  // const streamContext = getGlobalStreamContext();
+  // if (streamContext) {
+  //   return new Response(
+  //     await streamContext.resumableStream(streamId, () => stream),
+  //   );
+  // } else {
+  //   return new Response(stream);
+  // }
+
+  return new Response(stream);
 
   // return new Response(
   //   await streamContext.resumableStream(streamId, () => stream),

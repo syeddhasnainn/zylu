@@ -11,7 +11,7 @@ export default async function ChatPage(props: {
   const { id } = params;
 
   const token = await convexAuthNextjsToken();
-  const preloadedMessages = await preloadQuery(
+  const initialMessages = await fetchQuery(
     api.chats.getChatMessages,
     {
       chatId: id,
@@ -21,7 +21,7 @@ export default async function ChatPage(props: {
     },
   );
 
-  const initialMessages = preloadedQueryResult(preloadedMessages);
+  // const initialMessages = preloadedQueryResult(preloadedMessages);
 
   return (
     <ChatInterface

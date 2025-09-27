@@ -58,13 +58,13 @@ export default function ChatInterface({
     },
   });
 
-  useAutoResume({
-    autoResume: autoResume,
-    initialMessages: initialMessages,
-    experimental_resume,
-    data,
-    setMessages,
-  });
+  // useAutoResume({
+  //   autoResume: autoResume,
+  //   initialMessages: initialMessages,
+  //   experimental_resume,
+  //   data,
+  //   setMessages,
+  // });
 
   return (
     <div className="flex-1 max-w-3xl mx-auto w-full">
